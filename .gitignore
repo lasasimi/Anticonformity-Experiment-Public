@@ -1,0 +1,13 @@
+# Private source exports; publish only their anonymized Raw_otree_anon mirrors.
+**/Raw_otree/
+
+# Local editor and Python artifacts.
+.DS_Store
+__pycache__/
+*.py[cod]
+
+# ignore all combined CSVs due to large files
+**/Clean_files/01_raw_combined*.csv
+
+# ignore the anonymize_participants.py
+anonymize_participants.py

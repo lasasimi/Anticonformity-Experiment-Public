@@ -1,0 +1,18 @@
+condition,step,purpose,rows_before,rows_after,rows_excluded,participants_before,participants_after,participants_excluded,neighborhoods_before,neighborhoods_after,neighborhoods_excluded
+nonpolitical,01_to_02a_phase_filter,Exclude nonpolitical Phase_1 sessions.,13050,9150,3900,13050,9150,3900,0,0,0
+nonpolitical,02b_normalize_mock_columns,Standardize alternative mock-column prefixes; no intended row exclusion.,9150,9150,0,9150,9150,0,0,0,0
+nonpolitical,02c_group_and_duplicate_policy,Exclude ungrouped/single participants and later duplicate-label records.,9150,824,8326,9150,824,8326,0,0,0
+nonpolitical,02e_anti_proportion_filter,Exclude configured anti-proportion conditions.,824,820,4,824,820,4,0,0,0
+nonpolitical,02_to_03_wide_to_long,Reshape each retained participant into rounds 0–20; no participant exclusion.,820,17220,-16400,820,820,0,0,0,0
+nonpolitical,03_to_04_neighborhood_derivation,Derive neighbourhoods and record unmatched N04 half-groups; no participant exclusion yet.,17220,17220,0,820,820,0,0,99,-99
+nonpolitical,04_to_05_duplicate_neighborhoods,Apply the condition-specific duplicate-neighbourhood policy.,17220,16380,840,820,780,40,99,93,6
+nonpolitical,05_to_06_unmatched_n04,Exclude trajectories from unmatched N04 half-groups and classify responses.,16380,15624,756,780,744,36,93,93,0
+political,01_to_02a_phase_filter,Exclude nonpolitical Phase_1 sessions.,12400,12400,0,12400,12400,0,0,0,0
+political,02b_normalize_mock_columns,Standardize alternative mock-column prefixes; no intended row exclusion.,12400,12400,0,12400,12400,0,0,0,0
+political,02c_group_and_duplicate_policy,Exclude ungrouped/single participants and later duplicate-label records.,12400,954,11446,12400,954,11446,0,0,0
+political,02d_many_forced_groups,Exclude political groups with more than two forced-response members.,954,766,188,954,766,188,0,0,0
+political,02f_political_round9_repair,Repair round 9 and exclude configured incomplete political groups.,766,742,24,766,742,24,0,0,0
+political,02_to_03_wide_to_long,Reshape each retained participant into rounds 0–20; no participant exclusion.,742,15582,-14840,742,742,0,0,0,0
+political,03_to_04_neighborhood_derivation,Derive neighbourhoods and record unmatched N04 half-groups; no participant exclusion yet.,15582,15582,0,742,742,0,0,81,-81
+political,04_to_05_duplicate_neighborhoods,Apply the condition-specific duplicate-neighbourhood policy.,15582,15582,0,742,742,0,81,81,0
+political,05_to_06_unmatched_n04,Exclude trajectories from unmatched N04 half-groups and classify responses.,15582,13587,1995,742,647,95,81,81,0

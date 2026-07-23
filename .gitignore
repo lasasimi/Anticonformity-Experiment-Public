@@ -11,3 +11,6 @@ __pycache__/
 
 # ignore the anonymize_participants.py
 anonymize_participants.py
+
+# ignore the anonymization key
+anonymization_key*.csv

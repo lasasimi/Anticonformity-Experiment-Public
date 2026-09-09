@@ -15,4 +15,4 @@ political,02f_political_round9_repair,Repair round 9 and exclude configured inco
 political,02_to_03_wide_to_long,Reshape each retained participant into rounds 0–20; no participant exclusion.,742,15582,-14840,742,742,0,0,0,0
 political,03_to_04_neighborhood_derivation,Derive neighbourhoods and record unmatched N04 half-groups; no participant exclusion yet.,15582,15582,0,742,742,0,0,81,-81
 political,04_to_05_duplicate_neighborhoods,Apply the condition-specific duplicate-neighbourhood policy.,15582,15582,0,742,742,0,81,81,0
-political,05_to_06_unmatched_n04,Exclude trajectories from unmatched N04 half-groups and classify responses.,15582,13587,1995,742,647,95,81,81,0
+political,05_to_06_unmatched_n04,Exclude trajectories from unmatched N04 half-groups and classify responses.,15582,13566,2016,742,646,96,81,81,0

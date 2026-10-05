@@ -1,0 +1,138 @@
+{{ extends 'otree/WaitPage.html' }}
+
+{{ block title }} 
+{{ endblock }}
+{{ block content }}
+
+<link rel="stylesheet" href="{% static 'global/style.css' %}"/>
+
+
+<div class="wait-container">
+
+    <!-- Centered Title and animated typing -->
+    <div class="custom-title" id="custom-title" data-text="You continue your walk and will soon encounter a different group of neighbors"></div>
+
+    
+{{ if player.round_number > 1 }}
+{% if not control %}
+    {% if anticonformist %}
+        <div class="nudge-anti-card">
+        <h2>💡 Tip: Stand Out</h2> A variety of opinions can be beneficial. You could choose the options that are different from the majority.
+        </div>
+        
+    {% else %}
+        <div class="nudge-confo-card">
+            <h2>💡 Tip: Team Up</h2>  Neighborhoods work best when we stick together. You could choose the option most neighbors prefer.
+        </div>        
+
+    {% endif %}
+{% endif %}
+{{ endif }}
+    <p style="margin-top: 20px; background-color: #d4edda; padding: 12px; border-left: 5px solid #28a745; border-radius: 4px;">
+        ✅ This phase requires real-time responses. Stay at this tab/window and attentive. We’ll start once everyone is ready.
+        </p>
+
+        
+</div>
+
+{% if view.group_by_arrival_time %}
+<script>
+    if (!window.reloadScheduled) {
+        window.reloadScheduled = true;
+        var SECOND = 1000;
+        setInterval(function () {
+            window.location.reload();
+        }, 30 * SECOND);
+    }
+</script>
+{% endif %}
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const el = document.getElementById('custom-title');
+        if (!el) return;
+        const text = el.getAttribute('data-text') || el.textContent.trim();
+        el.textContent = '';
+
+        const cursor = document.createElement('span');
+        cursor.className = 'typer-cursor';
+        cursor.textContent = '|';
+        el.appendChild(cursor);
+
+        let i = 0;
+        function typeNext() {
+            if (i < text.length) {
+                // insert the next character before the cursor
+                cursor.insertAdjacentText('beforebegin', text[i]);
+                // small extra delay after spaces for readability
+                const delay = (text[i] === ' ') ? 80 : 36;
+                i++;
+                setTimeout(typeNext, delay);
+            } else {
+                // leave blinking cursor
+            }
+        }
+        typeNext();
+    });
+</script>
+{{ endblock }}
+
+{{ block styles }}
+<style>
+    body {
+        background-color: #d3d3d3; /* Light gray background */
+    }
+    /* typing cursor + title sizing */
+    .custom-title { 
+        font-weight:600; 
+        font-size:1.25rem; 
+        text-align:center; 
+        white-space:pre-wrap; 
+    }
+    .typer-cursor { 
+        display:inline-block; 
+        margin-left:4px; 
+        color:#333; 
+        animation: blink 1s steps(1) infinite; 
+    }
+
+    @keyframes blink { 50% { opacity: 0 } }
+</style>
+
+{% if player.participant.active == 0 %}
+<style>
+    body {
+        overflow: hidden;
+    }
+
+    .inactive_box {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        width: 100vw;
+        background-color: rgba(211, 211, 211, 0.7);
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .inactive_text {
+        color: #cc0000;
+        font-weight: bold;
+        text-align: center;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+</style>
+{% else %}
+<style>
+    .inactive_box {
+        display: none;
+    }
+</style>
+{% endif %}
+{{ endblock}}

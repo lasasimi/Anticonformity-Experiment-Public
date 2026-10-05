@@ -1,0 +1,21 @@
+{{ block content }}
+<link rel="stylesheet" href="{% static 'global/style.css' %}"/>
+<p class="red-alert">
+    You answered the question(s) on the previous page incorrectly.
+</p>
+<div class="card bg-mid m-0">
+    <h4 class="card-header">Provide your answer</h4>
+    <div class="card-body">
+    Answering incorrectly indicates that you may not have been paying attention to the questions.
+    You must confirm that you are active by answering a question. <strong>Please answer this following question correctly:</strong>
+    <br>
+    <p class="red-box">⛔ If you fail this check, you will not receive any payment and will exit this survey.</p>
+    <p>{{ formfields }}</p>
+    After you are done, please click Next.
+    </div>
+</div>
+<br>
+<button class="next-button" type="submit">Next</button>
+{{ endblock }}
+
+

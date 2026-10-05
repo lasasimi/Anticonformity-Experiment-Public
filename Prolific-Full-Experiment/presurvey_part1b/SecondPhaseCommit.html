@@ -1,0 +1,76 @@
+{{ block title }}
+<link rel="stylesheet" href="{% static 'global/style.css' %}"/>
+{{ endblock }}
+{{ block content }}
+
+ 
+<div class="card bg-mid m-0">
+    <h2 class="card-header">🟦 Phase 1: Initial Survey</h2>
+    <div class="card-body"> 
+
+    
+    <h5><strong>Participation in the second phase</strong></h5>
+    
+    There are 2 phases in this study with different tasks and rewards. Participation is voluntary, you can withdraw at any time, and you will be compensated for your time in accordance to which phase you have completed.
+
+        <ul>
+        <li>📘 <strong>Phase 1</strong> – Training & Initial Survey, <b>6-7 minutes</b>, <b>0.40 GBP / 0.54 USD</b></li>
+        <li>💬 <strong>Phase 2</strong> – Group Interaction, <b>max. 13 minutes</b>, <b>an additional 3.10 GBP / 4.18 USD</b></li>
+        </ul>
+
+        <p>⌛️ <strong>Phase 2</strong> requires a <strong>live interaction</strong> with other participants, so we will require you to wait until you will be matched with other participants (max. 20 minutes). If we are unable to match you with a group, you will receive a total of <strong>1.50 GBP / 2.01 USD</strong> as compensation for your<strong> waiting time.</strong></p>
+
+
+    You can only participate in the second phase <b>if you complete this survey</b> and <b>meet the eligibility criteria</b>. You will still be compensated <b>0.40 GBP / 0.54 USD</b> for your time if we find you ineligible to participate in the second phase. The second phase will be around 20 minutes long and you will be compensated <b>3.10 GBP / 4.18 USD</b> for your time in addition to the first phase payment. 
+    <br><br>
+    The second phase of the study will also be published on Prolific platform. We will choose <b>one timeslot from your indicated preference</b> and send you <b>a reminder message</b> at least <b>one the day before</b>.
+    <br><br>
+    The possible timeslots are:<br>
+        <div class="table-responsive">
+            <table class="table table-sm text-center">
+                <thead class="text-center">
+                    <tr>
+                        <th class="text-center"><b>Wed, February 25</b></th>
+                        <th class="text-center"><b>Thu, February 26</b></th>
+                        <th class="text-center"><b>Fri, February 27</b></th>
+                        <th class="text-center"><b>Sat, February 28</b></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>4:00-4:30 PM ET</td>
+                        <td>4:00-4:30 PM ET</td>
+                        <td>4:00-4:30 PM ET</td>
+                        <td>4:00-4:30 PM ET</td>
+                    </tr>
+                    <tr>
+                        <td>5:00-5:30 PM ET</td>
+                        <td>5:00-5:30 PM ET</td>
+                        <td>5:00-5:30 PM ET</td>
+                        <td>5:00-5:30 PM ET</td>
+                    </tr>
+                    <tr>
+                        <td>6:00-6:30 PM ET</td>
+                        <td>6:00-6:30 PM ET</td>
+                        <td>6:00-6:30 PM ET</td>
+                        <td>6:00-6:30 PM ET</td>
+                    </tr>
+                    <tr>
+                        <td>7:00-7:30 PM ET</td>
+                        <td>7:00-7:30 PM ET</td>
+                        <td>7:00-7:30 PM ET</td>
+                        <td>7:00-7:30 PM ET</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    <b>{{ form.commit_phase2.label }}</b> <br>
+    {{ form.commit_phase2 }} <br>
+
+
+    </div>
+</div>
+
+<br>
+    <button class="next-button" type="submit">Next</button>
+{{ endblock }}

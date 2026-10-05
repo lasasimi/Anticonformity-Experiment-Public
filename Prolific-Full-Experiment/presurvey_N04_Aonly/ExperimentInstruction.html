@@ -1,0 +1,50 @@
+{{ block title }}
+<link rel="stylesheet" href="{% static 'global/style.css' %}"/>
+{{ endblock }}
+{{ block content }}
+
+<!-- Dismissible & auto-fading banner -->
+<div id="banner-wrapper">
+    <div id="banner">
+        <span>🎉 Congratulations, you have successfully completed the Training phase.</span>
+
+        <!-- Close button -->
+        <span class="banner-close" onclick="dismissBanner()">&times;</span>
+    </div>
+</div>
+
+ 
+<div class="card bg-mid m-0">
+    <h2 class="card-header">🟦 Phase 1: Initial Survey</h2>
+    <div class="card-body"> 
+
+    
+    <h5><strong>Your Neighborhood </strong></h5>
+    
+    In the next phase, you will read an actual dilemma encountered by your village. Then, you will be asked a set of questions.
+    <br>    <br>
+    
+    <img src="/static/village-new-image.png" class="img-fluid" alt="Neighborhood Image" style="float:left; margin-right: 20px; max-width: 100%; height: 300px; "> 
+    <p>🏘️ As before, Imagine that <strong>you live in a village of around 50 houses owned by neighbors</strong> of different ages, occupations, and incomes. </p>
+    <p>👨‍👨‍👦‍👦 In a village, people share spaces and responsibilities, and <strong>issues arise</strong> about how to make <strong>shared decisions</strong> in the best interest of the community and get along together.</p>
+    <p>🏡 There are often different opinions on how to handle these issues. <strong>All neighbors meet as a community</strong> once every six months to discuss issues in the neighborhood to reach a decision. </p>
+    
+    <p>💭 We’d like to hear <strong>your initial opinions on the dilemmas</strong> your neighborhood is facing.</p>
+
+    </div>
+</div>
+
+<br>
+    <button class="next-button" type="submit">Next</button>
+
+<!-- JavaScript to handle the banner dismissal -->
+<script>
+    function dismissBanner() {
+        const banner = document.getElementById('banner');
+        banner.style.opacity = '0';
+        banner.style.visibility = 'hidden';
+    }
+
+    setTimeout(dismissBanner, 2300);
+</script>
+{{ endblock }}

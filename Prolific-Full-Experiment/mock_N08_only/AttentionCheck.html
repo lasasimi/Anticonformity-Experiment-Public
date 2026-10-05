@@ -1,0 +1,21 @@
+{{ block content }}
+<link rel="stylesheet" href="{% static 'global/style.css' %}"/>
+
+
+<form method="post">
+    <div class="card bg-mid m-0">
+        <h4 class="card-header">We could not find you a group</h4>
+        <div class="card-body">
+            Unfortunately, we couldn’t find enough participants to form your group. 
+            <strong>Click the "Next" button to confirm you're attentive and receive your waiting bonus.</strong>
+            <br>
+            <p class="red-box">⛔ If you did not click on time, you will not receive any payment and will exit this survey.</p>
+            
+        </div>
+    </div>
+    <br>
+    <!-- hidden field will set player.attention_check to True on submit -->
+    <input type="hidden" name="attention_check" value="True" />
+    <button class="next-button" id="submit-button" type="submit">Next</button>
+</form>
+{{ endblock }}

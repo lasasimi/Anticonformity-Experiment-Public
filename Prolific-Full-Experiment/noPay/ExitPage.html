@@ -1,0 +1,39 @@
+{{ block title }}<link rel="stylesheet" href="{% static 'global/style.css' %}"/>
+{{ endblock }}
+
+{{ block content }}
+<div class="red-box">
+    <p>Sorry, you cannot continue this study because {{ player.participant.reason }}</p>
+</div>
+<br>
+    <div class="card bg-mid m-0">
+    <h4 class="card-header">Help us improve the experience</h4>
+    <div class="card-body">
+    We would love to hear your feedback about the survey.
+    <br>
+    <strong>How did you find the overall experience of the survey?
+    Do you have any suggestions for improving the survey?</strong>
+
+    <strong>{{ formfields }}</strong>
+    
+    If you wish to contact us about issues or other details that you think are important, please do so by contacting us at <a href="mailto:collectivemindslab@csh.ac.at">collectivemindslab@csh.ac.at</a>
+    <br><br>
+    <strong>Click the "Submit" button below to submit your responses and get your code.</strong> Thanks again for your time and participation!
+    </div>
+</div>
+<br>
+<button class="next-button" id="submit-button" type="submit">Submit</button>
+
+    </div>
+</div>
+
+<script>
+    let nopay = js_vars.nopay; // Retrieve the Prolific URL from js_vars
+
+    document.getElementById('submit-button').addEventListener('click', function(event) {
+        event.preventDefault(); // Prevent the default form submission
+        window.location.href = nopay; // Redirect to the Prolific URL immediately
+    });
+</script>
+{{ endblock }}
+

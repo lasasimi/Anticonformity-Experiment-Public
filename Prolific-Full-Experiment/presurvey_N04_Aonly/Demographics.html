@@ -1,0 +1,97 @@
+{{ block title }}
+<link rel="stylesheet" href="{% static 'global/style.css' %}"/>
+{{ endblock }}
+
+{{ block content }}
+
+<div class="card bg-mid m-0">
+  <h2 class="card-header">Information about yourself</h2>
+    <div class="card-body">
+            <label for="age">How old are you?</label><p></p>
+            <p> <input type="number" name="age" required style ="width: 70px"> years </p>
+{{ formfield 'gender' }}
+{{ formfield 'education_lvl' }}
+{{ formfield 'neighborhood_type' }}
+<p>Here is a 7-point scale on which the political views that people might hold are arranged from extremely liberal to extremely conservative. Where would you place yourself on this scale, or haven't you thought much about this?</p>
+<div class="scale-container">
+    <label class="scale-option form-check">
+        <span class="scale-number">1</span>
+        <input type="radio" name="political_affiliation" value="1">
+        <span class="scale-label">Extremely Liberal</span>
+    </label>
+    <label class="scale-option">
+        <span class="scale-number">2</span>
+        <input type="radio" name="political_affiliation" value="2">
+        <span class="scale-label">Liberal</span>
+    </label>
+    <label class="scale-option">
+        <span class="scale-number">3</span>
+        <input type="radio" name="political_affiliation" value="3">
+        <span class="scale-label">Slightly Liberal</span>
+    </label>
+    <label class="scale-option">
+        <span class="scale-number">4</span>
+        <input type="radio" name="political_affiliation" value="4">
+        <span class="scale-label">Moderate, Middle of Road</span>
+    </label>
+    <label class="scale-option">
+        <span class="scale-number">5</span>
+        <input type="radio" name="political_affiliation" value="5">
+        <span class="scale-label">Slightly Conservative</span>
+    </label>
+    <label class="scale-option">
+        <span class="scale-number">6</span>
+        <input type="radio" name="political_affiliation" value="6">
+        <span class="scale-label">Conservative</span>
+    </label>
+    <label class="scale-option">
+        <span class="scale-number">7</span>
+        <input type="radio" name="political_affiliation" value="7">
+        <span class="scale-label">Extremely Conservative</span>
+    </label>
+    <label class="scale-option">
+        <span class="scale-number">–</span>
+        <input type="radio" name="political_affiliation" value="99">
+        <span class="scale-label">Don’t Know / Haven’t Thought</span>
+    </label>
+</div>
+
+      </div>
+
+</div>
+<br>
+<button class="next-button" type="submit">Next</button>
+
+{{ endblock }}
+{{ block style }}
+<style>
+.scale-container {
+    display: flex;
+    justify-content: space-between;
+    margin: 10px 0;
+    text-align: center;
+}
+
+.scale-option {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0px 5px 5px;
+    white-space: normal;
+}
+
+.scale-number {
+    font-weight: normal;
+    font-size: normal;
+    margin-bottom: 4px;
+}
+
+.scale-label {
+    margin-top: 4px;
+    font-size: 0.9em;
+}
+</style>
+
+{{ endblock}}
+

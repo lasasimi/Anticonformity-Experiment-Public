@@ -675,11 +675,25 @@ def derive_neighbourhood_data(df_long: pd.DataFrame, raw: pd.DataFrame, registry
     treatment_map = dict(zip(raw["participant.code"], raw["participant.anticonformist"]))
     df["dgroup_faction"] = df["dgroup_str"].map(lambda value: [response_map[code] for code in group_codes(value) if code in response_map] or np.nan)
     df["dgroup_antic_nudge"] = df["dgroup_str"].map(lambda value: [treatment_map[code] for code in group_codes(value) if code in treatment_map] or np.nan)
-    n04_groups = df.loc[(df["beta"] == 0.0) & (df["round_no"] == 0)].groupby("group_id").agg(
-        session_code=("session.code", "first"), p_anti=("p_anti", "first"), faction=("response", "first")
+    n04_round0 = df.loc[(df["beta"] == 0.0) & (df["round_no"] == 0), ["group_id", "session.code", "participant.code", "p_anti", "response"]].copy()
+    # Preserve First Come First Served (FCFS) ordering by pairing half-groups using earliest join time in each group.
+    start_times = raw[["participant.code", "participant.time_started_utc"]].drop_duplicates("participant.code")
+    start_times["participant.time_started_utc"] = start_times["participant.time_started_utc"].fillna("").astype(str)
+    start_time_map = dict(zip(start_times["participant.code"], start_times["participant.time_started_utc"]))
+    n04_round0["group_start_time"] = n04_round0["participant.code"].map(start_time_map).fillna("9999-12-31 23:59:59")
+    n04_groups = n04_round0.groupby("group_id").agg(
+        session_code=("session.code", "first"),
+        p_anti=("p_anti", "first"),
+        faction=("response", "first"),
+        group_start_time=("group_start_time", "min"),
     ).reset_index()
-    n04_groups["session_code"] = pd.Categorical(n04_groups["session_code"], categories=registry["session-id"], ordered=True)
-    n04_groups = n04_groups.sort_values("session_code")
+    if condition == "political":
+        session_order = {session: index for index, session in enumerate(registry["session-id"].astype(str).tolist())}
+        n04_groups["session_order"] = n04_groups["session_code"].astype(str).map(session_order)
+        n04_groups = n04_groups.sort_values(["p_anti", "group_start_time", "session_order", "group_id"], kind="stable")
+    else:
+        n04_groups["session_code"] = pd.Categorical(n04_groups["session_code"], categories=registry["session-id"], ordered=True)
+        n04_groups = n04_groups.sort_values("session_code")
     pairs, unpaired, group_to_neigh = [], [], {}
     labels = {0.0: "p00", 0.5: "p50", 1.0: "p100", 99.0: "p99"}
     for p_anti, group in n04_groups.groupby("p_anti", sort=False, observed=True):

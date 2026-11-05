@@ -1,0 +1,27 @@
+{{ block title }}
+    Thanks for completing the study.
+           
+{{ endblock }}
+{{ block content }}
+
+    <div class="card bg-mid m-0">
+    <h4 class="card-header">Please wait while you're redirected to Prolific</h4>
+    <div class="card-body">
+        {{ player.participant.reason }}
+
+    </div>
+    </div>
+<!--- JS script to show the reason for 5 seconds and then redirecting to the corresponding Prolific link-->
+<script>
+    let pay = js_vars.pay;
+
+    window.onload = function(){
+        // Wait for 5 seconds (5000 ms) before redirecting
+        setTimeout(function() {
+            window.location.href = pay;
+        }, 5000);
+    }
+</script>
+
+{{ endblock }}
+

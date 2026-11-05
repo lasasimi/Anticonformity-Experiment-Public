@@ -1,0 +1,56 @@
+
+{{ block content }}
+
+<div class="card bg-mid m-0">
+    <h4 class="card-header">No consent given</h4>
+    <div class="card-body">
+        In the previous page, you indicated that you do not consent to participate in the survey. You will automatically exit the survey after 30 seconds.
+        <br><br>
+        If you think you have made a mistake, please go back to the previous page by selecting "Back" button and then select "Yes" to consent to participate in the survey.
+    </div>
+</div>
+
+<br>
+    <!-- {{ formfields }} -->
+    <button class="next-button" type="submit">Back</button>
+<style>
+    .responsive-image {
+        max-width: 100%; /* Ensures the image does not exceed the container width */
+        height: auto; /* Maintains the aspect ratio */
+        display: block; /* Centers the image when combined with margin auto */
+        margin: auto;
+        border-radius: 8px; /* Optional: Adds rounded corners */
+    }
+
+    /* Media query for narrow devices */
+    @media (max-width: 600px) {
+        .responsive-image {
+            max-width: 90%; /* Slightly smaller width for narrow screens */
+            height: auto; /* Maintain aspect ratio */
+        }
+    }
+        .next-button {
+        background-color: white;
+        color: black;
+        border: 2px solid #008CBA;
+        font-size: 16px;
+        padding: 10px 24px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        cursor: pointer;
+        border-radius: 12px;
+    }
+    .next-button:hover {
+        background-color: #008CBA;
+        color: white;
+    }
+    .next-button:active {
+        background-color: #005f8b; /* Darker blue for clicked state */
+        color: white;
+        border: 2px solid #005f8b;
+    }
+    
+    </style>
+</style>
+{{ endblock }}

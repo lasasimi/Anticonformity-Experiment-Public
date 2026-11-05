@@ -1,0 +1,286 @@
+
+{{ block title }}
+<link rel="stylesheet" href="{% static 'global/style.css' %}"/>
+What others are thinking
+    
+{{ endblock }}
+{{ block content }}
+
+{{ if player.participant.active == 0 }}
+<div class="inactive_box">
+  {% if not too_many_forced %}
+    <h2 class="inactive_text">Please click the button to indicate that you are active.<br><br>
+    If you do not respond for too many times, you will forfeit all payment.<br><br>
+
+    <div class="confirm_activity">
+      <button class="btn button2" type="button" onclick="markActive()">I am active</button></h2>
+    </div>
+  {% else %}
+    <h2 class="inactive_text">Sorry, you cannot continue. You did not respond for too many times. <br><br>
+    As mentioned before, this will forfeit all payment.</h2>
+  {% endif %}
+</div>
+
+{{ endif }}
+{% if not control %}
+    {% if anticonformist %}
+    <div class="nudge-anti-card sticky-top">
+      <h2>💡 Tip: Stand Out</h2> A variety of opinions can be beneficial. You could choose the options that are different from the majority.
+    </div>
+    
+    {% else %}
+    <div class="nudge-confo-card sticky-top">
+        <h2>💡 Tip: Team Up</h2> Neighborhoods work best when we stick together. You could choose the option most neighbors prefer.
+    </div>        
+
+    {% endif %}
+{% endif %}
+    <br>
+<div class="card bg-mid m-0">
+<h4 class="card-header">
+   {{ scenario_title }}
+   <span class="active-indicator" aria-live="polite">
+     <span id="activeNowText" class="active-text">(Live)</span>
+     <span id="activeNowDot" class="active-dot" aria-hidden="true"></span>
+   </span>
+ </h4>
+    <div class="card-body">
+      {{ scenario_text }} 
+      <br><br>
+      <h5>The neighbors you passed on your walk said:</h5>
+      <br><br>
+      <!-- Neighbors -->
+      <div class="players-row neighbors">
+        {{ for r in others_responses }}
+        
+          <div class="player">
+             <!-- conditionally display the color of the speech bubble based on the response -->
+                <div class="speech-bubble
+                    {% if r == -1 %} bg-sage 
+                    {% elif r == 0 %} bg-gray
+                    {% else %} bg-lavender
+                    {% endif %}">
+                  {{ if r == -1 }}
+                      {{ scenario_against }}
+                  {{ elif r == 0 }}
+                      {{ scenario_neutral }}
+                  {{ else }}
+                      {{ scenario_for }}
+                  {{ endif }}
+                </div>
+            <img src="{{ static 'person-shape.png' }}" class="avatar
+                                                            {% if r == -1 %} bg-sage 
+                                                            {% elif r == 0 %} bg-gray
+                                                            {% else %} bg-lavender
+                                                            {% endif %}">
+          </div>
+      {{ endfor }}
+
+</div>
+<br>
+    <h5> <strong>What do you think the community should do?</strong></h5>
+     
+      <form method="post">
+      {{ formfield_errors 'new_response' }}
+        <input type="hidden" name="new_response" id="new_response">
+
+        <div class="button-container">
+          <button class="button button2 bg-sage" type="button" onclick="selectAnswer(this, '-1')">
+              {{ scenario_against }}
+          </button>
+          <button class="button button2 bg-gray" type="button" onclick="selectAnswer(this, '0')">
+              {{ scenario_neutral }}
+          </button>
+          <button class="button button2 bg-lavender" type="button" onclick="selectAnswer(this, '1')">
+              {{ scenario_for }}
+          </button>
+        </div>
+      </form>
+    </div>
+</div>
+
+<br>
+<div class="round-progress"
+     data-current="{{ player.round_number }}"
+     data-total="{{ C.NUM_ROUNDS }}"
+     role="progressbar"
+     aria-valuemin="1"
+     aria-valuenow="{{ player.round_number }}"
+     aria-valuemax="{{ C.NUM_ROUNDS }}"
+     aria-label="Round progress">
+  <div class="round-progress__label" id="roundProgressLabel">
+    Round {{ player.round_number }} of {{ C.NUM_ROUNDS }}
+  </div>
+  <div class="round-progress__track">
+    <div class="round-progress__bar" id="roundProgressBar"></div>
+  </div>
+</div>
+
+<script>
+  function selectAnswer(button, value) {
+      // Set the response value
+      document.getElementById('new_response').value = value;
+
+      // Style: mark selected
+      const buttons = document.querySelectorAll('.button-container .button2');
+      buttons.forEach(btn => btn.classList.remove('selected'));
+      button.classList.add('selected');
+
+      // Submit the form
+      button.closest('form').submit();
+  }
+
+// function when the participant clicks "I am active" button
+  function markActive() {
+  // Send a live message to the server to set participant.active = 1
+  if (typeof liveSend === 'function') {
+    liveSend({ confirm_activity: true });
+  }
+  // Hide the overlay immediately on the client
+  const overlay = document.querySelector('.inactive_box');
+  if (overlay) overlay.style.display = 'none';
+  // Allow page scrolling again
+  document.body.style.overflow = '';
+}
+
+</script>
+{% if participant.audio_unlocked %}
+<script>
+const audioAway  = new Audio("{{ static 'bike-bell-ring-once.mp3' }}");
+
+// Play intro sound once when page loads
+  document.addEventListener('DOMContentLoaded', () => {
+    audioAway.currentTime = 0;
+    audioAway.play().catch(()=>{});
+});
+
+// Play away sound if user leaves the tab
+  document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+          audioAway.currentTime = 0;
+          audioAway.play().catch(()=>{});
+      }
+  });
+
+  document.addEventListener('DOMContentLoaded', function () {
+  const el = document.querySelector('.round-progress');
+  if (!el) return;
+  const cur = Number(el.dataset.current || 0);
+  const tot = Math.max(1, Number(el.dataset.total || 1));
+  const pct = Math.max(0, Math.min(100, Math.round((cur / tot) * 100)));
+  const bar = document.getElementById('roundProgressBar');
+  const lab = document.getElementById('roundProgressLabel');
+  if (bar) bar.style.width = pct + '%';
+  if (lab) lab.textContent = `Round ${cur} of ${tot}`;
+});
+</script>
+{% endif %}
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const textEl = document.getElementById('activeNowText');
+    const dotEl = document.getElementById('activeNowDot');
+    if (!textEl || !dotEl) return;
+
+    // start visible
+    textEl.classList.add('visible');
+    dotEl.classList.add('visible');
+
+    setInterval(() => {
+      textEl.classList.toggle('visible');
+      textEl.classList.toggle('hidden');
+      dotEl.classList.toggle('visible');
+      dotEl.classList.toggle('hidden');
+    }, 1200);
+  });
+
+</script>
+{{ endblock }}
+
+{{ block styles }}
+
+<style>
+  /* active blink: simple appear/disappear */
+  .active-indicator { margin-left: 8px; font-weight: 600; display: inline-flex; align-items: center; gap:6px; }
+  .active-text, .active-dot { transition: opacity .12s linear; }
+  .visible { opacity: 1; }
+  .hidden { opacity: 0; pointer-events: none; }
+  .active-dot { width:10px; height:10px; border-radius:50%; background:#cc2e2e; display:inline-block; }
+
+
+  .sticky-top {
+  position: sticky;
+  top: 0;
+  z-index: 2000;}
+
+   /* Reserve space so the fixed bar doesn't cover content */
+  body { padding-bottom: 64px; }
+
+  .round-progress {
+    position: fixed;
+    left: 0; right: 0; bottom: 0;
+    z-index: 2500;
+    background: rgba(255, 254, 254, 0.96);
+    box-shadow: 0 -2px 10px rgba(0,0,0,.06);
+    padding: 10px 16px;
+  }
+  .round-progress__label {
+    font-size: 1rem;
+    font-weight: bold;
+    margin-bottom: 6px;
+    color: #333;
+    text-align: center;
+  }
+  .round-progress__track {
+    width: 100%;
+    height: 10px;
+    background: #f0f0f0;
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .round-progress__bar {
+    width: 0%;              /* set via JS */
+    height: 100%;
+    background: linear-gradient(90deg, #008CBA, #21c7e8);
+    border-radius: 999px;
+    transition: width .25s ease;
+  }
+</style>
+{% if player.participant.active == 0 %}
+<style>
+    body {
+        overflow: hidden;
+    }
+
+    .inactive_box {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        width: 100vw;
+        background-color: rgba(211, 211, 211, 0.7);
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .inactive_text {
+        color: #cc0000;
+        font-weight: bold;
+        text-align: center;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+</style>
+{% else %}
+<style>
+    .inactive_box {
+        display: none;
+    }
+</style>
+{% endif %}
+
+{{ endblock}}

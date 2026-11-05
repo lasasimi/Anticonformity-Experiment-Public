@@ -1,0 +1,175 @@
+{{ block title }}
+<link rel="stylesheet" href="{% static 'global/style.css' %}"/>
+⏳ Did you understand the tip you received?
+{{ endblock }}
+
+{{ block content }}
+    <div class="card-body">
+       <h5> You selected:  <strong>{{ player.nudge_training_text }}</strong></h5>
+{% if correct_nudge_training and not anticonformist %}
+    <div class = "green-box">
+    ✅ Correct! You followed the tip by <strong>conforming with the majority opinion</strong> in this case.
+    </div>
+{% elif correct_nudge_training and anticonformist %}
+    <div class = "green-box">
+    ✅ Correct! You followed the tip, you did so by <strong>selecting the opinion that is not endorsed by the majority</strong>.
+    </div>
+{% elif not correct_nudge_training and not anticonformist %}
+    <div class = "red-box">
+    ❌ If you followed the tip correctly, you should've answered "<strong>{{ scenario_for }}</strong>" since it <strong>conforms with the majority</strong> opinion.
+    </div>
+{% elif not correct_nudge_training and anticonformist %}
+    <div class = "red-box">
+    ❌ If you followed the tip correctly, you should've answered "<strong>{{ scenario_neutral }} or {{ scenario_against }}</strong>" since they are <strong>opinions that are not endorsed by the majority</strong>
+    </div>
+{% endif %}
+
+{% if anticonformist %}
+    <div class="nudge-anti-card sticky-top">
+        <h2>💡 Tip: Stand Out</h2> A variety of opinions can be beneficial. You could choose the options that are different from the majority.
+    </div>
+    
+    {% else %}
+    <div class="nudge-confo-card sticky-top">
+        <h2>💡 Tip: Team Up</h2>  Neighborhoods work best when we stick together. You could choose the option most neighbors prefer.
+    </div>        
+
+    {% endif %}
+<br>
+    <div class="card bg-mid m-0">
+    <h4 class="card-header">Try again one more time</h4>
+
+        <div class="card-body">
+        <h5>Imagine if the neighbors you passed on your walk said:</h5>
+        <br><br>
+        <!-- Neighbors -->
+        <div class="players-row neighbors">
+            {{ for r in others_responses }}
+            
+            <div class="player">
+                <!-- conditionally display the color of the speech bubble based on the response -->
+                    <div class="speech-bubble
+                        {% if r == -1 %} bg-sage 
+                        {% elif r == 0 %} bg-gray
+                        {% else %} bg-lavender
+                        {% endif %}">
+                    {{ if r == -1 }}
+                        {{ scenario_against }}
+                    {{ elif r == 0 }}
+                        {{ scenario_neutral }}
+                    {{ else }}
+                        {{ scenario_for }}
+                    {{ endif }}
+                    </div>
+                <img src="{{ static 'person-shape.png' }}" class="avatar">
+            </div>
+        {{ endfor }}
+
+    </div>
+    <br>
+        <div class="yellow-box"><h5>If you <strong>follow the tip above</strong>, what would be your choice?</h5>
+        
+        <form method="post">
+        {{ formfield_errors 'nudge_training_two' }}
+            <input type="hidden" name="nudge_training_two" id="nudge_training_two">
+
+            <div class="button-container">
+            <button class="button button2 bg-sage" type="button" onclick="selectAnswer(this, '-1')">
+                {{ scenario_against }}
+            </button>
+            <button class="button button2 bg-gray" type="button" onclick="selectAnswer(this, '0')">
+                {{ scenario_neutral }}
+            </button>
+            <button class="button button2 bg-lavender" type="button" onclick="selectAnswer(this, '1')">
+                {{ scenario_for }}
+            </button>
+            </div>
+        </form>
+        </div>
+        </div>
+    </div>
+<br>
+</div>
+
+
+
+<style>
+    .nudge-anti-card{
+        margin-top: 20px;
+        background-color: #e9caca; 
+        padding: 12px; 
+        border-left: 5px solid #d43d3b; 
+        border-radius: 4px;
+
+    }
+    .nudge-confo-card{
+        margin-top: 20px;
+        background-color: #b6c6e7; 
+        padding: 12px; 
+        border-left: 5px solid #1b54d0; 
+        border-radius: 4px;
+    }
+    .responsive-image {
+        max-width: 100%; /* Ensures the image does not exceed the container width */
+        height: auto; /* Maintains the aspect ratio */
+        display: block; /* Centers the image when combined with margin auto */
+        margin: auto;
+        border-radius: 8px; /* Optional: Adds rounded corners */
+    }
+
+    /* Media query for narrow devices */
+    @media (max-width: 400px) {
+        .responsive-image {
+            max-width: 80%; /* Slightly smaller width for narrow screens */
+            height: auto; /* Maintain aspect ratio */
+        }
+    }
+        .next-button {
+        background-color: white;
+        color: black;
+        border: 2px solid #008CBA;
+        font-size: 16px;
+        padding: 10px 24px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        cursor: pointer;
+        border-radius: 12px;
+    }
+    .next-button:hover {
+        background-color: #008CBA;
+        color: white;
+    }
+    .next-button:active {
+        background-color: #005f8b; /* Darker blue for clicked state */
+        color: white;
+        border: 2px solid #005f8b;
+    }
+
+  .sticky-top {
+  position: sticky;
+  top: 0;
+  z-index: 2000;}
+</style>
+<style>
+    .otree-form-errors {
+    display: none !important;
+}
+</style>
+
+<script>
+ function selectAnswer(button, value) {
+      // Set the response value
+      document.getElementById('nudge_training_two').value = value;
+
+      // Style: mark selected
+      const buttons = document.querySelectorAll('.button-container .button2');
+      buttons.forEach(btn => btn.classList.remove('selected'));
+      button.classList.add('selected');
+
+      // Submit the form
+      button.closest('form').submit();
+  }
+</script>
+
+{{ endblock }}

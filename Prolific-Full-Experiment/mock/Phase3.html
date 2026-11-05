@@ -1,0 +1,99 @@
+
+{{ block title }}
+<link rel="stylesheet" href="{% static 'global/style.css' %}"/>
+{{ endblock }}
+
+
+
+{{ block content }}
+
+<div class="card bg-mid m-0">
+    <h2 class="card-header">🟥 Phase 2 - Group Interaction</h2>
+    <div class="card-body"> 
+        <h5><strong>Ready for the Live Group Interaction</strong></p></h5><p>
+
+        <ul>
+            <li>The next part of the study involves <strong>real-time interaction with others</strong> indicated by the <b>blinking (Live) 🔴 text.</b></li>
+            <li>It will comprise of <strong>20 short rounds</strong>. </li>
+            <li>You’ll pass by other neighbors, <strong>participants like you, </strong>to share opinions about the earlier community dilemma.</li>
+            <li>In each round, it’s <strong>up to you</strong> whether you’d like to keep your opinion or change it.</li>
+            <li><strong>Consider the tip</strong> when making up your mind.</li>
+            <li>After you complete all rounds, <b>you’ll see your community's final decision</b> about this dilemma.</li>
+        </ul>
+
+        <div class = "green-box">
+            Each time, you will pass by some new neighbors. Just like you can see their opinions, they’ll also be able to see yours.
+        </div>
+        <br>
+        <h5>⚠️ Important </h5>
+        <ul>
+            <li><strong>Do not leave this tab/window</strong>, be fully attentive, for the entire session.</li>
+            <li>✅ By participating and remaining throughout the entire rounds, you will receive 
+            a <strong>bonus payment</strong>.</li>
+        </ul>
+
+        <div class="red-box">
+            ❌ If you become <b>inactive</b> during the next phase, you will <b>not receive any payment</b>
+        </div>
+    </div>
+</div>
+<br>
+<p id="done" style="display: none;">
+   Press Next to begin.
+</p>
+
+    {{ formfields }}
+    <button id="next-button" class="next-button" type="submit" style="display: none;">Next</button>
+
+<style>
+    .responsive-image {
+        max-width: 100%; /* Ensures the image does not exceed the container width */
+        height: auto; /* Maintains the aspect ratio */
+        display: block; /* Centers the image when combined with margin auto */
+        margin: auto;
+        border-radius: 8px; /* Optional: Adds rounded corners */
+    }
+
+    /* Media query for narrow devices */
+    @media (max-width: 400px) {
+        .responsive-image {
+            max-width: 80%; /* Slightly smaller width for narrow screens */
+            height: auto; /* Maintain aspect ratio */
+        }
+    }
+        .next-button {
+        background-color: white;
+        color: black;
+        border: 2px solid #008CBA;
+        font-size: 16px;
+        padding: 10px 24px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        cursor: pointer;
+        border-radius: 12px;
+    }
+    .next-button:hover {
+        background-color: #008CBA;
+        color: white;
+    }
+    .next-button:active {
+        background-color: #005f8b; /* Darker blue for clicked state */
+        color: white;
+        border: 2px solid #005f8b;
+    }
+    
+    </style>
+</style>
+
+
+<script>
+    setTimeout(function() {
+        document.getElementById("done").style.display = "block"; // Show next text
+        document.getElementById("next-button").style.display = "inline-block";
+    }, 5000); // 5 seconds delay
+</script>
+
+
+
+{{ endblock }}

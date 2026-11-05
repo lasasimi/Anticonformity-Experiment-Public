@@ -1,0 +1,8 @@
+# oTree-may-not-overwrite-this-file
+otree>=6.0.14
+sentry-sdk>=0.7.9
+psycopg2>=2.8.4
+numpy==2.2.4
+pandas==2.2.2
+matplotlib==3.8.4
+seaborn==0.13.2

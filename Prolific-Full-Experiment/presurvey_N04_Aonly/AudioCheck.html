@@ -1,0 +1,259 @@
+{{ block title }}
+<link rel="stylesheet" href="{% static 'global/style.css' %}"/>
+{{ endblock }}
+
+{{ block content }}
+
+<div class="card bg-mid m-0">
+  <h2 class="card-header">🔊 Check your audio</h2>
+    <div class="card-body">
+        <p>We require you to enable your audio <strong>so you can receive important sound notifications during the study.</strong> Please turn on your audio and set the volume up. We don’t record any audio. Press ‘Play’ below, listen to the sound, and then select what you heard.
+
+        <audio id="checkAudio" src="{{ static 'test.mp3' }}" preload="auto"></audio>
+        <p> <button type="button" id="enableAudioBtn" class="btn primary">🔈 Enable audio</button></p>
+        <p id="audioStatus" class="hint">Click “Enable audio” so your browser allows study sounds.</p>
+        <div id="audioControls" class="hidden" style="margin: 10px 0;">
+            <button type="button" id="playBtn" class="btn">▶️ Play</button>
+            <button type="button" id="pauseBtn" class="btn">⏸️ Pause</button>
+            <button type="button" id="stopBtn" class="btn">⏹️ Stop</button>
+            <button type="button" id="volUpBtn" class="btn">🔊 Vol +</button>
+            <button type="button" id="volDownBtn" class="btn">🔉 Vol -</button>
+        </div>
+
+        <input type="hidden" name="audio_unlocked" id="audioUnlocked" value="0" />
+        
+        <div id="audioQuestion" class="hidden">
+            <strong>{{ form.audio_answer.label }}</strong><br>
+            {{ form.audio_answer }}
+            <br><br>
+            <p class="hint" id="imgSelectHint" style="display:none;">⚠️ Please select the image that matches the sound you heard.</p>
+            
+            <strong>{{ form.audio_answer_image.label }}</strong><br>
+            
+            <!-- Hidden field that oTree will save into player.audio_answer_image -->
+            <input type="hidden" name="audio_answer_image" id="id_audio_answer_image" value="">
+
+            <div class="captcha-grid" id="audioImageGrid">
+                <img src="/static/audio_images/option1.jpg" alt="Option 1" class="captcha-cell selectable-image" data-value="1">
+                <img src="/static/audio_images/option2.jpg" alt="Option 2" class="captcha-cell selectable-image" data-value="2">
+                <img src="/static/audio_images/option3.jpg" alt="Option 3" class="captcha-cell selectable-image" data-value="3">
+                <img src="/static/audio_images/option4.jpg" alt="Option 4" class="captcha-cell selectable-image" data-value="4">
+                <img src="/static/audio_images/option5.jpg" alt="Option 5" class="captcha-cell selectable-image" data-value="5">
+                <img src="/static/audio_images/option6.jpg" alt="Option 6" class="captcha-cell selectable-image" data-value="6">
+                <img src="/static/audio_images/option7.jpg" alt="Option 7" class="captcha-cell selectable-image" data-value="7">
+                <img src="/static/audio_images/option8.jpg" alt="Option 8" class="captcha-cell selectable-image" data-value="8">
+                <img src="/static/audio_images/option9.jpg" alt="Option 9" class="captcha-cell selectable-image" data-value="9">
+                <img src="/static/audio_images/option10.png" alt="Option 10" class="captcha-cell selectable-image" data-value="99">🚫 No sound, I couldn't hear the audio'
+            </div>
+            <br><br>
+            <strong>If you do not want to enable audio output, we kindly ask you to return the study.</strong>
+        </div>
+    </div>
+
+</div>
+
+<br>
+<button class="next-button" type="submit" id="nextBtn" disabled>Next</button>
+<p id="nextHint" class="hint"> </p>
+{{ endblock }}
+{{ block scripts}}
+
+<script>
+const form = document.querySelector('form');
+const audio = document.getElementById('checkAudio');
+const enableBtn = document.getElementById('enableAudioBtn');
+const status = document.getElementById('audioStatus');
+const hiddenField = document.getElementById('audioUnlocked');
+const nextBtn = document.getElementById('nextBtn');
+const nextHint = document.getElementById('nextHint');
+const audioControls = document.getElementById('audioControls');
+const audioQuestion = document.getElementById('audioQuestion');
+
+
+function revealSections() {
+    audioControls.style.display = 'block';
+    audioQuestion.style.display = 'block';
+    nextHint.style.display = 'none';
+}
+
+async function unlockAudio() {
+    try {
+        await audio.play();
+        audio.pause();
+        audio.currentTime = 0;
+        hiddenField.value = '1';
+        enableBtn.disabled = true;
+        nextBtn.disabled = false;
+        status.textContent = '✅ Audio unlocked. Use the controls below to test the sound.';
+        status.style.color = '#1a7f00';
+        revealSections();
+    } catch (err) {
+        status.textContent = '⚠️ Browser blocked autoplay. Press “Play” once to allow sound.';
+        status.style.color = '#c23b00';
+    }
+}
+
+enableBtn.addEventListener('click', unlockAudio);
+
+document.getElementById('playBtn').addEventListener('click', async () => {
+    try {
+        await audio.play();
+        hiddenField.value = '1';
+        nextBtn.disabled = false;
+        status.textContent = '✅ Audio is playing. Adjust volume as needed.';
+        status.style.color = '#1a7f00';
+        revealSections();
+    } catch (e) {
+        status.textContent = '⚠️ Click “Enable audio” first, then try again.';
+        status.style.color = '#c23b00';
+    }
+});
+
+// Strengthen submit guard to require image selection too
+form.addEventListener('submit', e => {
+    if (hiddenField.value !== '1') {
+        e.preventDefault();
+        status.textContent = '⚠️ Enable audio and play the test sound before continuing.';
+        status.style.color = '#c23b00';
+        nextHint.style.display = 'block';
+        return;
+    }
+    if (!imgHiddenField.value) {
+        e.preventDefault();
+        imgHint.style.display = 'block';
+    }
+});
+
+document.getElementById('pauseBtn').addEventListener('click', () => {
+    audio.pause();
+});
+
+document.getElementById('stopBtn').addEventListener('click', () => {
+    audio.pause();
+    audio.currentTime = 0;
+});
+
+document.getElementById('volUpBtn').addEventListener('click', () => {
+    audio.volume = Math.min(audio.volume + 0.1, 1);
+});
+
+document.getElementById('volDownBtn').addEventListener('click', () => {
+    audio.volume = Math.max(audio.volume - 0.1, 0);
+});
+
+
+const imgHiddenField = document.getElementById('id_audio_answer_image');
+const imgHint = document.getElementById('imgSelectHint');
+
+function clearSelected() {
+    document.querySelectorAll('.selectable-image').forEach(el => {
+        el.classList.remove('img-selected');
+    });
+}
+
+document.querySelectorAll('.selectable-image').forEach(img => {
+    img.addEventListener('click', () => {
+        clearSelected();
+        img.classList.add('img-selected');
+        imgHiddenField.value = img.dataset.value;
+        imgHint.style.display = 'none';
+    });
+});
+
+</script>
+{{ endblock}}
+{{ block style }}
+<style>
+.scale-container {
+    display: flex;
+    justify-content: space-between;
+    margin: 10px 0;
+    text-align: center;
+}
+
+.scale-option {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0px 5px 5px;
+    white-space: normal;
+}
+
+.scale-number {
+    font-weight: normal;
+    font-size: normal;
+    margin-bottom: 4px;
+}
+
+.scale-label {
+    margin-top: 4px;
+    font-size: 0.9em;
+}
+.btn {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  background: white;
+  cursor: pointer;
+  user-select: none;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+}
+.btn:active { transform: translateY(1px); }
+.btn.small { 
+    padding: 6px 8px; 
+    font-size: 0.9rem; 
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    background: white;
+    cursor: pointer;
+    user-select: none;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+    }
+.hint { margin-top: 8px; color: #ff1515; }
+.btn.primary { background:#1b54d0; color:#fff; }
+.btn.primary:disabled { opacity:0.6; cursor:default; }
+.next-button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    
+}
+.hidden {
+    display: none;
+}
+.captcha-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin: 10px 0 6px;
+  max-width: 500px;
+}
+.captcha-cell {
+  position: relative;
+  max-width: 100%;
+  max-height: 3cm;
+  cursor: pointer;
+  border: 2px solid #d6d6d6;
+  border-radius: 10px;
+  padding: 2px;
+  background:#fff;
+  transition: border-color .18s, box-shadow .18s, transform .18s;
+  text-align: center;
+  font-size: .8rem;
+  user-select: none;
+}
+.selectable-image {
+  transition: box-shadow .18s, transform .18s, border-color .18s;
+  border: 2px solid #d6d6d6;
+  border-radius: 10px;
+  padding: 2px;
+}
+.selectable-image.img-selected {
+  border-color:#1b54d0;
+  box-shadow:0 0 0 3px rgba(27,84,208,.25);
+  transform: translateY(-2px);
+}
+</style>
+
+{{ endblock}}
+

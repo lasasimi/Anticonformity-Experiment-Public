@@ -1,0 +1,99 @@
+
+{{ block title }}
+<link rel="stylesheet" href="{% static 'global/style.css' %}"/>
+{{ endblock }}
+
+
+
+{{ block content }}
+<div class="green-box text-center">
+    <h3>🎉 Congratulations! You've completed the interactive rounds.</h3>
+    <p>Let's see the final decision made by your neighborhood based on the majority.</p>
+</div>
+<br>
+<div class="card bg-mid m-0">
+    <!-- Centered Title and animated typing -->
+    <div class="card-header text-center">
+    <div class="custom-title" id="custom-title" data-text="At the end, your community has chosen to..."></div>
+    </div>
+    <div id="final-selection" class="card-body delayed-hidden" aria-hidden="true">
+        {% if majority_response == -1 %}
+            <h3 class="text-center bg-sage"> {{ scenario_against }}</h3>
+        {% elif majority_response == 0 %}
+            <h3 class="text-center bg-gray"> {{ scenario_neutral }}</h3>
+        {% elif majority_response == 1 %}
+            <h3 class="text-center bg-lavender"> {{ scenario_for }}</h3>
+        {% else %}
+            <h3 class="text-center bg-yellow">postpone their decision because there is no majority</h3>
+        {% endif %}
+
+    </div>
+</div>
+<br>
+    <button id="next-button" class="next-button" type="submit">Next</button>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const el = document.getElementById('custom-title');
+        if (!el) return;
+        const text = el.getAttribute('data-text') || el.textContent.trim();
+        el.textContent = '';
+
+        const cursor = document.createElement('span');
+        cursor.className = 'typer-cursor';
+        cursor.textContent = '|';
+        el.appendChild(cursor);
+
+        let i = 0;
+        function typeNext() {
+            if (i < text.length) {
+                // insert the next character before the cursor
+                cursor.insertAdjacentText('beforebegin', text[i]);
+                // small extra delay after spaces for readability
+                const delay = (text[i] === ' ') ? 80 : 36;
+                i++;
+                setTimeout(typeNext, delay);
+            } else {
+                // leave blinking cursor
+            }
+        }
+        typeNext();
+
+        // reveal final selection after 2 seconds
+        setTimeout(() => {
+            const sel = document.getElementById('final-selection');
+            if (sel) {
+                sel.classList.remove('delayed-hidden');
+                sel.classList.add('delayed-visible');
+                sel.setAttribute('aria-hidden', 'false');
+            }
+        }, 3500);
+    });
+</script>
+
+{{ endblock }}
+
+
+{{ block styles }}
+<style>
+    body {
+        background-color: #ffffff; /* Light gray background */
+    }
+    /* typing cursor + title sizing */
+    .custom-title { 
+        font-weight:600; 
+        font-size:1.25rem; 
+        text-align:center; 
+        white-space:pre-wrap; 
+    }
+    .typer-cursor { 
+        display:inline-block; 
+        margin-left:4px; 
+        color:#333; 
+        animation: blink 1s steps(1) infinite; 
+    }
+    /* delayed reveal */
+    .delayed-hidden { opacity: 0; visibility: hidden; transition: opacity .35s ease, visibility .35s; }
+    .delayed-visible { opacity: 1; visibility: visible; transition: opacity .35s ease, visibility .35s; }
+</style>
+{{ endblock}}

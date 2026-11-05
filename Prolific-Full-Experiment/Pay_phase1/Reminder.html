@@ -1,0 +1,40 @@
+{{ block title }}
+<link rel="stylesheet" href="{% static 'global/style.css' %}"/>
+{{ endblock }}
+{{ block content }}
+
+ 
+<div class="card bg-mid m-0">
+    <h2 class="card-header">🟦 Phase 1: End</h2>
+    <div class="card-body"> 
+
+    
+    <h5><strong>Thank you for completing the Phase 1!</strong></h5>
+    
+    You are eligible to participate in the second phase of the study. You are rewarded with <b>0.40 GBP / 0.54 USD</b> for your time at the end of this survey.
+    
+    <div class = "green-box">
+    💡 Remember: You need to log in on <b>one of your selected time slots</b>: 
+    <br>
+    <!-- Dynamically show chosen time slots -->
+    {{ if selected_time_slots }}
+    <ul>
+        {{ for slot in selected_time_slots }}
+            <li><b>{{ slot }}</b></li>
+        {{ endfor }}
+    </ul>
+    {{ else }}
+    <b>Your selected slot information is unavailable.</b>
+    {{ endif }}
+    </div>
+
+    <br>
+    📅  We will send you <b>a message on Prolific</b> to remind you on <b>the day before</b> if there are enough people in that slot. Otherwise, we will offer you an alternative timeslot. To avoid forgetting, please <b>note the selected time slot in your personal calendar</b>.
+    <br><br>
+    😊 We truly appreciate your help!
+    </div>
+</div>
+
+<br>
+    <button class="next-button" type="submit">Submit</button>
+{{ endblock }}

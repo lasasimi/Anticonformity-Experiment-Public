@@ -1,0 +1,59 @@
+{{ block title }}
+<link rel="stylesheet" href="{% static 'global/style.css' %}"/>
+{{ endblock }}
+{{ block content }}
+
+<h2>🟦 Phase 1: Training & Initial Survey</h2>
+<div class="card-body"><p class="yellow-box">This is <b>an example</b> of an issue that your community is facing. Choose your initial opinion about this. In the next phase, we will show you what your neighbors think about it.</p>
+  
+        
+<div class="card bg-mid m-0">
+  <h4 class="card-header">The Lost Cat</h4>
+
+  <div class="card-body">
+
+      One of the neighbors recently lost their cat. The cat is old and is usually staying inside the house. One neighbor mentions that the cat was roaming around the neighborhood two days ago. Some neighbors propose to help search for the cat near the sewage in case it was trapped. However, some are against helping the search because they saw the cat was alright, it was just roaming around the garden with other strays. Other neighbors want to first check if the cat in the garden is indeed the lost cat.
+      <br>
+      
+
+  </div>
+</div>
+<br>
+<strong>What do you think the community should do?</strong>
+        <form method="post">
+    {{ formfield_errors 'test_scenario' }} 
+      <input type="hidden" name="test_scenario" id="test_scenario">
+
+      <div class="button-container">
+        <button class="button button2 bg-sage" type="button" onclick="selectAnswer(this)" data-answer="-1">
+            Do not help with the search
+        </button>
+        <button class="button button2 bg-gray" type="button" onclick="selectAnswer(this)" data-answer="0">
+            Check if the cat is in the garden
+        </button>
+        <button class="button button2 bg-lavender" type="button" onclick="selectAnswer(this)" data-answer="1">
+            Help search near the sewage
+        </button>
+      </div>
+    </form>
+      
+    </div>
+
+<script>
+
+  function selectAnswer(button, value) {
+      const answer = button.dataset.answer;
+      console.log("Selected answer:", answer);  // Debug line
+      // Set the response value
+      document.getElementById('test_scenario').value = answer;
+
+      // Style: mark selected
+      const buttons = document.querySelectorAll('.button-container .button2');
+      buttons.forEach(btn => btn.classList.remove('selected'));
+      button.classList.add('selected');
+
+      // Submit the form
+      button.closest('form').submit();
+  }
+</script>
+{{ endblock }}

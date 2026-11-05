@@ -1,0 +1,64 @@
+{{ block title }}
+<link rel="stylesheet" href="{% static 'global/style.css' %}"/>
+{{ endblock }}
+{{ block content }}
+<h2>🟦 Phase 1: Training & Initial Survey</h2>
+<p class="yellow-box">
+    This is <b>an example</b> of when you see your neighbors' responses to a dilemma.
+</p>
+<div class="card bg-mid m-0">
+  <h4 class="card-header">{{ scenario_title }}</h4>
+
+  <div class="card-body">
+
+      One of the neighbors recently lost their cat. The cat is old and is usually staying inside the house. One neighbor mentions that the cat was roaming around the neighborhood two days ago. Some neighbors propose to help search for the cat near the sewage in case it was trapped. However, some are against helping the search because they saw the cat was alright, it was just roaming around the garden with other strays. Other neighbors want to first verify if the cat in the garden is indeed the lost cat.
+      <br><br>
+    <h5>Your neighbors' answers</h5>
+      Imagine that you come across a group of neighbors during a walk and have a brief chat about the dilemma. Each neighbor has shared their opinions. Here’s what they said:
+      
+
+  </div>
+
+
+    <div class="players-wrapper">
+    <!-- Neighbors --> 
+        <div class="players-row neighbors">
+            {{ for r in others_responses }}
+                <div class="player">
+                    <div class="speech-bubble
+                    {% if r == -1 %} bg-sage 
+                    {% elif r == 0 %} bg-gray
+                    {% else %} bg-lavender
+                    {% endif %}">
+                        {{ if r == -1 }}
+                            {{ scenario_against }}
+                        {{ elif r == 0 }}
+                            {{ scenario_neutral }}
+                        {{ else }}
+                            {{ scenario_for }}
+                        {{ endif }}
+                    </div>
+                    <img src="{{ static 'person-shape.png' }}" class="avatar">
+                </div>
+            {{ endfor }}
+            
+</div>
+</div>
+</div>
+
+<br><br>
+            
+<div class="card bg-white mb-1">
+    <h4 class="card-header">Questions</h4>
+    <div class="card-body">
+            <p> Please answer the following questions about the dilemma you just read. 
+            You can only proceed to the next steps after <b>answering all questions correctly</b> within 2 attempts. </p>
+            {{ formfields }}
+    </div>
+</div>
+
+
+<br>
+    <button class="next-button" type="submit">Next</button>
+
+{{ endblock }}

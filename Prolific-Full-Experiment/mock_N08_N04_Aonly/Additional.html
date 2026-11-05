@@ -1,0 +1,278 @@
+
+{{ block title }}
+<link rel="stylesheet" href="{% static 'global/style.css' %}"/>
+{{ endblock }}
+
+
+
+{{ block content }}
+<br>
+
+<div class="card bg-mid m-0 p-3">
+
+    <div class="card-body">
+    <h4>Questions </h4>
+    Before we proceed to show your community's final decision, please answer the questions below about your feelings towards other people in this study. Your answers will not be shared.
+    <br><br>
+    {{ for q in aff_pol_questions }}
+    <div class="slider-question" data-field="{{ q.field_name }}">
+        <p class="question-prompt">What feelings do you have towards people in this study who chose to <strong>{{ q.suffix }}?</strong></p>
+
+        <input id="{{ q.field_name }}_touched" type="hidden" value="False">
+        <input id="{{ q.field_name }}" name="{{ q.field_name }}" type="hidden">
+
+        <div class="direction-wrap">
+            <input
+                id="slider_{{ q.field_name }}"
+                type="range"
+                min="0"
+                max="100"
+                step="10"
+                value="50"
+                class="direction-slider unselected"
+                oninput="activateSlider('{{ q.field_name }}', this.value);"
+                onchange="activateSlider('{{ q.field_name }}', this.value);"
+                onpointerdown="markTouched('{{ q.field_name }}');"
+            />
+            <!-- tick row injected by JS -->
+            <div class="direction-labels">
+                <span>Very cold</span>
+                <span>Very warm</span>
+            </div>
+            <div class="direction-meta">
+                Selected: <b id="value_{{ q.field_name }}">—</b>
+            </div>
+
+            <div class="direction-error">{{ formfield_errors q.field_name }}</div>
+            <div class="direction-error client-error" id="client_error_{{ q.field_name }}"></div>
+        </div>
+    </div>
+    {{ endfor }}
+</div>
+</div>
+
+<br>
+<button id="next-button" class="next-button" type="submit">Next</button>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Keep sliders visually neutral until user interacts.
+        document.querySelectorAll('.direction-slider').forEach(function (slider) {
+            slider.style.background = '#d7dbe2';
+        });
+
+        // Build thermometer tick rows for each slider.
+        document.querySelectorAll('.slider-question').forEach(function (box) {
+            var fieldName = box.getAttribute('data-field');
+            var slider = document.getElementById('slider_' + fieldName);
+            if (!slider) return;
+
+            var tickRow = document.createElement('div');
+            tickRow.className = 'tick-row';
+
+            for (var i = 0; i <= 10; i++) {
+                var val = i * 10;
+                var item = document.createElement('div');
+                item.className = 'tick-item';
+
+                var line = document.createElement('div');
+                line.className = 'tick-line';
+                item.appendChild(line);
+
+                var num = document.createElement('div');
+                num.className = 'tick-num';
+                num.textContent = val;
+                item.appendChild(num);
+
+                tickRow.appendChild(item);
+            }
+
+            // Insert tick row immediately after the slider handle.
+            slider.insertAdjacentElement('afterend', tickRow);
+        });
+
+        // Client-side guard: both sliders must be touched before submit.
+        var nextBtn = document.getElementById('next-button');
+        if (nextBtn) {
+            nextBtn.form.addEventListener('submit', function (event) {
+                var allAnswered = true;
+                document.querySelectorAll('.slider-question').forEach(function (box) {
+                    var fieldName = box.getAttribute('data-field');
+                    var touched = document.getElementById(fieldName + '_touched');
+                    var errorBox = document.getElementById('client_error_' + fieldName);
+                    if (errorBox) {
+                        errorBox.textContent = '';
+                    }
+
+                    if (!touched || touched.value !== 'True') {
+                        allAnswered = false;
+                        if (errorBox) {
+                            errorBox.textContent = 'Please move the slider to provide an answer.';
+                        }
+                    }
+                });
+
+                if (!allAnswered) {
+                    event.preventDefault();
+                }
+            });
+        }
+    });
+
+    function markTouched(fieldName) {
+        var touched = document.getElementById(fieldName + '_touched');
+        if (touched) {
+            touched.value = 'True';
+        }
+    }
+
+    function activateSlider(fieldName, value) {
+        var slider = document.getElementById('slider_' + fieldName);
+        var hidden = document.getElementById(fieldName);
+        var valueLabel = document.getElementById('value_' + fieldName);
+        var errorBox = document.getElementById('client_error_' + fieldName);
+
+        if (slider) {
+            slider.classList.remove('unselected');
+        }
+        markTouched(fieldName);
+
+        if (hidden) {
+            hidden.value = value;
+        }
+        if (valueLabel) {
+            valueLabel.textContent = value;
+        }
+        if (errorBox) {
+            errorBox.textContent = '';
+        }
+    }
+</script>
+
+{{ endblock }}
+
+
+{{ block styles }}
+<style>
+    body {
+        background-color: #ffffff;
+    }
+
+    .question-prompt {
+        margin-bottom: 1rem;
+    }
+
+    .slider-question {
+        margin-bottom: 1.8rem;
+    }
+
+    .direction-wrap {
+        max-width: 100%;
+
+    }
+
+    .direction-slider {
+        width: 100%;
+        height: 8px;
+        -webkit-appearance: none;
+        appearance: none;
+        background: #d7dbe2;
+        outline: none;
+        border-radius: 4px;
+    }
+
+    .direction-slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 20px;
+        height: 20px;
+        background: #185fa5;
+        cursor: pointer;
+        border-radius: 50%;
+        border: 2px solid #ffffff;
+        margin-left: -4px;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .direction-slider::-moz-range-thumb {
+        width: 20px;
+        height: 20px;
+        background: #185fa5;
+        cursor: pointer;
+        border-radius: 50%;
+        border: 2px solid #ffffff;
+        margin-left: -4px;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .direction-slider.unselected::-webkit-slider-thumb {
+        opacity: 0;
+    }
+
+    .direction-slider.unselected::-moz-range-thumb {
+        opacity: 0;
+    }
+
+    /* Thermometer tick row */
+    .tick-row {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        margin-top: 6px;
+    }
+
+    .tick-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-left: 2px;
+        flex: 0 0 auto;
+    }
+
+    .tick-line {
+        width: 1px;
+        height: 10px;
+        background: #999;
+        margin-bottom: 3px;
+    }
+
+    .tick-num {
+        font-size: 0.72rem;
+        color: #555;
+        line-height: 1;
+    }
+    .direction-labels {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 8px;
+    font-size: 0.9rem;
+    color: #444;
+    gap: 12px;
+    }
+
+    .direction-labels span {
+    max-width: 90px;
+    white-space: normal;
+    line-height: 1.2;
+    }
+
+    .direction-labels span:first-child {
+    text-align: left;
+    }
+
+    .direction-labels span:last-child {
+    text-align: right;
+    }
+
+    .direction-meta {
+        margin-top: 10px;
+    }
+
+    .direction-error {
+        color: #c62828;
+        font-weight: 600;
+        margin-top: 8px;
+    }
+</style>
+{{ endblock }}

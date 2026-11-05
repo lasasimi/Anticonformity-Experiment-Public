@@ -1,0 +1,59 @@
+\begin{table}[H]
+\centering
+\caption{Linear Mixed-Effects Model Predicting Proportion of Middle Ground Option ($r_0$) (Binomial; Round Modeled With a Natural Spline, Knots at 5, 10, 15)}
+\label{tab:best_binom}
+\begingroup
+\footnotesize
+\renewcommand{\arraystretch}{0.90} % default is 1.0
+
+\begin{tabularx}{\linewidth}{Xcccc}
+\toprule
+\textbf{Fixed Effects} & \textbf{Estimate} & \textbf{SE} & \textbf{95\% CI} & \textbf{p-value} \\
+\midrule
+Intercept & -4.739 & 0.260 & [-5.248, -4.231] & $< .001^{\text{***}}$ \\
+ns(Round, knots = c(5, 10, 15))1 & 0.746 & 0.094 & [0.561, 0.931] & $< .001^{\text{***}}$ \\
+ns(Round, knots = c(5, 10, 15))2 & 0.806 & 0.089 & [0.632, 0.979] & $< .001^{\text{***}}$ \\
+ns(Round, knots = c(5, 10, 15))3 & 2.347 & 0.192 & [1.971, 2.722] & $< .001^{\text{***}}$ \\
+ns(Round, knots = c(5, 10, 15))4 & 0.055 & 0.076 & [-0.093, 0.203] & .468 \\
+$\beta = 0.5$ & 0.845 & 0.323 & [0.211, 1.478] & $.009^{\text{**}}$ \\
+Anti = 0.0 & -0.381 & 0.365 & [-1.096, 0.335] & .297 \\
+Anti = 0.5 & 2.355 & 0.295 & [1.778, 2.933] & $< .001^{\text{***}}$ \\
+Anti = 1.0 & 2.941 & 0.296 & [2.360, 3.521] & $< .001^{\text{***}}$ \\
+Political framing & 0.748 & 0.333 & [0.096, 1.400] & $.024^{\text{*}}$ \\
+$\beta = 0.5 \times$ Anti = 0.0 & -1.173 & 0.504 & [-2.160, -0.185] & $.020^{\text{*}}$ \\
+$\beta = 0.5 \times$ Anti = 0.5 & -0.790 & 0.409 & [-1.592, 0.013] & .054 \\
+$\beta = 0.5 \times$ Anti = 1.0 & -1.009 & 0.402 & [-1.797, -0.221] & $.012^{\text{*}}$ \\
+$\beta = 0.5 \times$ Political framing & -0.996 & 0.446 & [-1.870, -0.122] & $.026^{\text{*}}$ \\
+Anti = 0.0 $\times$ Political framing & -0.885 & 0.509 & [-1.882, 0.113] & .082 \\
+Anti = 0.5 $\times$ Political framing & -1.025 & 0.429 & [-1.866, -0.183] & $.017^{\text{*}}$ \\
+Anti = 1.0 $\times$ Political framing & -0.969 & 0.417 & [-1.787, -0.151] & $.020^{\text{*}}$ \\
+$\beta = 0.5 \times$ Anti = 0.0 $\times$ Political framing & 1.659 & 0.696 & [0.294, 3.024] & $.017^{\text{*}}$ \\
+$\beta = 0.5 \times$ Anti = 0.5 $\times$ Political framing & 1.120 & 0.591 & [-0.038, 2.277] & .058 \\
+$\beta = 0.5 \times$ Anti = 1.0 $\times$ Political framing & 1.109 & 0.572 & [-0.012, 2.230] & .053 \\
+
+\midrule
+\textbf{Random Effects} & \textbf{Variance} & \textbf{SD} & & \\
+\midrule
+Intercept (nid\_unique) & 0.340 & 0.583 & & \\
+
+\midrule
+\textbf{Model Fit} & & & & \\
+\midrule
+Observations & \multicolumn{4}{l}{3,654 (174 neighborhoods $\times$ 21 rounds)} \\
+Marginal $R^2$ & \multicolumn{4}{l}{0.578} \\
+Conditional $R^2$ & \multicolumn{4}{l}{0.685} \\
+AIC & \multicolumn{4}{l}{7852.0} \\
+BIC & \multicolumn{4}{l}{7982.3} \\
+ICC & \multicolumn{4}{l}{0.254} \\
+RMSE & \multicolumn{4}{l}{0.90} \\
+
+\bottomrule
+\end{tabularx}
+
+\vspace{0.6em}
+{\footnotesize
+\setlength{\baselineskip}{12pt}
+\textit{Note.} We assume a binomial outcome. Odds ratios are reported. Time (Round) is modelled with a natural cubic spline with interior knots at rounds 5, 10 and 15 (four basis coefficients, not individually interpretable). Reference categories: $\beta = 0$ (no interaction), Anti = no tip (control), Nonpolitical framing. SE = standard error; CI = confidence interval. *$p < .05$, **$p < .01$, ***$p < .001$. \par}
+\par}
+\endgroup
+\end{table}

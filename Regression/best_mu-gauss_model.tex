@@ -1,0 +1,60 @@
+\begin{table}[H]
+\centering
+\caption{Linear Mixed-Effects Model Predicting Polarization Index (Gaussian; Round Modeled With a Natural Spline, Knots at 5, 10, 15)}
+\label{tab:best_gauss}
+\begingroup
+\footnotesize
+\renewcommand{\arraystretch}{0.90} % default is 1.0
+
+\begin{tabularx}{\linewidth}{Xcccc}
+\toprule
+\textbf{Fixed Effects} & \textbf{Estimate} & \textbf{SE} & \textbf{95\% CI} & \textbf{p-value} \\
+\midrule
+Intercept & 1.143 & 0.035 & [1.075, 1.212] & $< .001^{\text{***}}$ \\
+ns(Round, knots = c(5, 10, 15))1 & -0.236 & 0.014 & [-0.264, -0.208] & $< .001^{\text{***}}$ \\
+ns(Round, knots = c(5, 10, 15))2 & -0.224 & 0.014 & [-0.251, -0.197] & $< .001^{\text{***}}$ \\
+ns(Round, knots = c(5, 10, 15))3 & -0.653 & 0.027 & [-0.705, -0.601] & $< .001^{\text{***}}$ \\
+ns(Round, knots = c(5, 10, 15))4 & -0.066 & 0.013 & [-0.090, -0.041] & $< .001^{\text{***}}$ \\
+$\beta = 0.5$ & -0.209 & 0.046 & [-0.300, -0.118] & $< .001^{\text{***}}$ \\
+Anti = 0.0 & 0.054 & 0.048 & [-0.040, 0.147] & .259 \\
+Anti = 0.5 & -0.335 & 0.043 & [-0.420, -0.250] & $< .001^{\text{***}}$ \\
+Anti = 1.0 & -0.449 & 0.044 & [-0.535, -0.363] & $< .001^{\text{***}}$ \\
+Political framing & -0.061 & 0.048 & [-0.154, 0.032] & .202 \\
+$\beta = 0.5 \times$ Anti = 0.0 & -0.444 & 0.066 & [-0.573, -0.316] & $< .001^{\text{***}}$ \\
+$\beta = 0.5 \times$ Anti = 0.5 & 0.156 & 0.064 & [0.032, 0.281] & $.014^{\text{*}}$ \\
+$\beta = 0.5 \times$ Anti = 1.0 & 0.245 & 0.062 & [0.122, 0.367] & $< .001^{\text{***}}$ \\
+$\beta = 0.5 \times$ Political framing & 0.095 & 0.066 & [-0.034, 0.224] & .148 \\
+Anti = 0.0 $\times$ Political framing & 0.066 & 0.067 & [-0.066, 0.198] & .325 \\
+Anti = 0.5 $\times$ Political framing & 0.109 & 0.067 & [-0.022, 0.239] & .102 \\
+Anti = 1.0 $\times$ Political framing & 0.140 & 0.065 & [0.013, 0.267] & $.030^{\text{*}}$ \\
+$\beta = 0.5 \times$ Anti = 0.0 $\times$ Political framing & 0.115 & 0.093 & [-0.067, 0.297] & .215 \\
+$\beta = 0.5 \times$ Anti = 0.5 $\times$ Political framing & -0.122 & 0.093 & [-0.306, 0.061] & .190 \\
+$\beta = 0.5 \times$ Anti = 1.0 $\times$ Political framing & -0.135 & 0.091 & [-0.313, 0.042] & .135 \\
+
+\midrule
+\textbf{Random Effects} & \textbf{Variance} & \textbf{SD} & & \\
+\midrule
+Intercept (nid\_unique) & 0.010 & 0.099 & & \\
+Residual & 0.032 & 0.180 & & \\
+
+\midrule
+\textbf{Model Fit} & & & & \\
+\midrule
+Observations & \multicolumn{4}{l}{3,654 (174 neighborhoods $\times$ 21 rounds)} \\
+Marginal $R^2$ & \multicolumn{4}{l}{0.496} \\
+Conditional $R^2$ & \multicolumn{4}{l}{0.613} \\
+AIC & \multicolumn{4}{l}{-1790.0} \\
+BIC & \multicolumn{4}{l}{-1653.5} \\
+ICC & \multicolumn{4}{l}{0.232} \\
+RMSE & \multicolumn{4}{l}{0.18} \\
+
+\bottomrule
+\end{tabularx}
+
+\vspace{0.6em}
+{\footnotesize
+\setlength{\baselineskip}{12pt}
+\textit{Note.} We assume a gaussian distribution of polarization index as the outcome. Time (Round) is modelled with a natural cubic spline with interior knots at rounds 5, 10 and 15 (four basis coefficients, not individually interpretable). Reference categories: $\beta = 0$ (no interaction), Anti = no tip (control), Nonpolitical framing. SE = standard error; CI = confidence interval. *$p < .05$, **$p < .01$, ***$p < .001$. \par
+\par}
+\endgroup
+\end{table}

@@ -606,6 +606,7 @@ def wide_to_long(df_wide: pd.DataFrame) -> pd.DataFrame:
         "duplicated_participant", "keep_entry", "presurvey.1.player.age",
         "presurvey.1.player.gender", "presurvey.1.player.education_lvl",
         "presurvey.1.player.neighborhood_type", "presurvey.1.player.political_affiliation",
+        "presurvey.1.player.political_charge", "presurvey.1.player.emotional_charge",
     ]
     mock_fields = [
         "player.old_response", "player.new_response", "player.forced_response",
@@ -616,7 +617,7 @@ def wide_to_long(df_wide: pd.DataFrame) -> pd.DataFrame:
     for _, row in df_wide.iterrows():
         base = {column: row.get(column) for column in identity}
         presurvey = base | {"round_no": 0}
-        for field in ("response", "political_charge", "emotional_charge", "scenario_code"):
+        for field in ("response", "scenario_code"):
             presurvey[field] = row.get(f"presurvey.1.player.{field}")
         records.append(presurvey)
         for round_no in range(1, N_ROUNDS + 1):
@@ -723,8 +724,8 @@ def add_presurvey_and_apply_neighbourhood_rules(df: pd.DataFrame, condition: str
         "presurvey.1.player.education_lvl": "demog_edu",
         "presurvey.1.player.neighborhood_type": "demog_neigh_type",
         "presurvey.1.player.political_affiliation": "demog_pol_aff",
-        "political_charge": "pol_charge",
-        "emotional_charge": "emo_charge",
+        "presurvey.1.player.political_charge": "pol_charge",
+        "presurvey.1.player.emotional_charge": "emo_charge",
     }
     df = df.rename(columns=demographic_columns)
     for column in demographic_columns.values():

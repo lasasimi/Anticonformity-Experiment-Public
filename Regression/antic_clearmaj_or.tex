@@ -1,0 +1,24 @@
+\begin{table}[H]
+\centering
+\caption{Odds Ratios of a Clear Majority in the Previous Round Predicting Anticonforming Responses (Logit GLMM)}
+\label{tab:or_antic_clearmaj}
+\begingroup
+\footnotesize
+\renewcommand{\arraystretch}{0.90}
+
+\begin{tabularx}{\linewidth}{Xcccc}
+\toprule
+\textbf{Predictor} & \textbf{OR} & \textbf{SE (log-odds)} & \textbf{95\% CI} & \textbf{p-value} \\
+\midrule
+Intercept & 12.930 & 0.125 & [10.128, 16.508] & $< .001^{\text{***}}$ \\
+Clear majority (3 of 3) vs. narrow majority (2 of 3) & 0.456 & 0.108 & [0.369, 0.563] & $< .001^{\text{***}}$ \\
+\bottomrule
+\end{tabularx}
+
+\vspace{0.6em}
+{\footnotesize
+\setlength{\baselineskip}{12pt}
+\textit{Note.} Logit generalized linear mixed model of whether a participant anticonformed in a round (Bernoulli outcome, one row per participant and round) with a random intercept for participant (variance = 3.225; 5,816 rounds from 363 participants). A random intercept for neighborhood was dropped because its estimated variance was zero (singular fit); coefficients were similar with it included. Only rounds in which the previous round had a majority among the three other neighbors are included. A clear majority means all three neighbors gave the same response in the previous round; a narrow majority means two of three did. Odds ratios (OR) are reported: OR $> 1$ indicates higher odds of anticonforming, OR $< 1$ lower odds. The intercept is the odds of anticonforming after a narrow majority for a typical participant (random intercept = 0). SE = standard error of the log-odds coefficient; CI = Wald 95\% confidence interval. *$p < .05$, **$p < .01$, ***$p < .001$.
+\par}
+\endgroup
+\end{table}

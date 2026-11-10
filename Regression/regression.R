@@ -22,6 +22,7 @@
 #
 # NOTE: To skip refitting, load the saved models from models/ instead
 # (see "ONLY LOAD THE MODELS" below)
+# IMPORTANT: If you load the models without refitting, you still need to load the dn_combined in order to run the marginaleffects functions.
 
 # REPRODUCIBILITY (renv)
 # Package versions are pinned in renv.lock. The .Rprofile in this folder
@@ -50,18 +51,25 @@ MODEL_PATH <- paste0(REGRESSION_PATH, "models/")
 
 
 ### ONLY LOAD THE MODELS ###
-# r0 Binomial Models
-# r0_models_loaded <- readRDS(paste0(MODEL_PATH, "/r0_binom_models.rds"))
-# Example to call the model: either with their names or with the index
-# r0_models_loaded$"Main only, Round Spline Knot 5,10,15"
-# r0_models_loaded[1]
+## r0 Binomial Models
+r0_binom_models_load <- readRDS(paste0(MODEL_PATH, "/r0_binom_models.rds"))
+## Example to call the model: either with their names or with the index
+# names(r0_binom_models_load)
+# r0_binom_models_load$"Main only, Round Spline Knot 5,10,15"
+# r0_binom_models_load[1]
+## Best model: "Interaction, No Round Slope, Round Spline Knot 5,10,15"
+r0_binom_models_legend = r0_binom_models_load
+# To see the interpretation, jump to the rows where r0_binom_models_legend is used
 
-# mu Binomial Models
+
+## mu Binomial Models
 # mu_gaussian_models_load <- readRDS(paste0(MODEL_PATH, "/mu_gaussian_models.rds"))
 # mu_gaussian_models_load$"Main only, Round Spline Knot 5,10,15"
 # mu_gaussian_models_load[2]
 # names(mu_gaussian_models_load)
 
+## Load the prettified dn_combined
+dn_combined <- readRDS(paste0(MODEL_PATH, "/dn_combined.rds"))
 
 
 # Load data
@@ -220,6 +228,11 @@ dn_combined$framing <- factor(
   levels = c("1", "2"),
   labels = c("Nonpolitical framing", "Political framing")
 )
+
+# Save the prettified dn_combined in a RDS file
+# RDS keeps factor levels/order (reference level) and column types; CSV is only a readable copy
+saveRDS(dn_combined, paste0(MODEL_PATH, "/dn_combined.rds"))
+# Reload with: dn_combined <- readRDS(paste0(MODEL_PATH, "/dn_combined.rds"))
 
 # ===============================================================================
 # FITTING THE MODELS
@@ -629,7 +642,7 @@ message("Saved figure to: ", normalizePath(fig_file_pred_all))
 # ------------------------------------------------------------------------------------------------------------
 best_binom <- m_binom_interactions_noroundslope_roundspline_spec_5_10_15
 # or if you load the model directly from the RDS file:
-# best_binom <- readRDS(paste0(MODEL_PATH, "/r0_binom_models.rds"))$Interaction, No Round Slope, Round Spline Knot 5,10,15
+# best_binom <- readRDS(paste0(MODEL_PATH, "/r0_binom_models.rds"))$`Interaction, No Round Slope, Round Spline Knot 5,10,15`
 
 output_file <- paste0(REGRESSION_PATH, "best_r0-binom_model.html")
 
@@ -669,6 +682,7 @@ modelsummary(
 # (a) Pooled AME of each Anti level vs. control (averaged over beta, framing, round)
 ame_anti_pooled <- avg_comparisons(
   best_binom,
+  newdata = dn_combined,
   variables = list(p_anti = "reference"),
   type = "response", re.form = NA
 )
@@ -676,6 +690,7 @@ ame_anti_pooled <- avg_comparisons(
 # (b) AME of each Anti level vs. control within each beta x framing condition
 ame_anti_cond <- avg_comparisons(
   best_binom,
+  newdata = dn_combined,
   variables = list(p_anti = "reference"),
   by = c("beta", "framing"),
   type = "response", re.form = NA
@@ -707,6 +722,43 @@ fmt_ame(ame_anti_cond)
 # fmt_ame(ame_anti_pairwise)
 
 
+# Three-way interaction on the probability scale (delta method on the conditional AMEs). For each Anti level:
+# the framing gap of the Anti effect (Political - Nonpolitical) at beta = 0 and at beta = 0.5, and their
+# difference ((Pol - Nonpol | beta = 0.5) - (Pol - Nonpol | beta = 0)) = the three-way interaction
+ame_cond_df <- as.data.frame(ame_anti_cond)
+V_ame_cond <- vcov(ame_anti_cond)
+ame_3way <- lapply(c("Anti = 0.5", "Anti = 1.0"), function(a) {
+  idx <- function(b, f) {
+    i <- which(grepl(a, ame_cond_df$contrast, fixed = TRUE) & ame_cond_df$beta == b & ame_cond_df$framing == f)
+    stopifnot(length(i) == 1)
+    i
+  }
+  k_gap <- function(b) {
+    k <- rep(0, nrow(ame_cond_df))
+    k[idx(b, "Political framing")] <- 1
+    k[idx(b, "Nonpolitical framing")] <- -1
+    k
+  }
+  k0 <- k_gap("β = 0.0")
+  k5 <- k_gap("β = 0.5")
+  ks <- list("Framing gap at $\\beta = 0$" = k0,
+             "Framing gap at $\\beta = 0.5$" = k5,
+             "Three-way interaction (gap at $\\beta = 0.5$ $-$ gap at $\\beta = 0$)" = k5 - k0)
+  bind_rows(lapply(names(ks), function(nm) {
+    est <- sum(ks[[nm]] * ame_cond_df$estimate)
+    se  <- sqrt(drop(t(ks[[nm]]) %*% V_ame_cond %*% ks[[nm]]))
+    tibble(grp = paste(a, "vs. Control"), contrast = nm,
+           estimate = est, std.error = se,
+           conf.low = est - qnorm(0.975) * se, conf.high = est + qnorm(0.975) * se,
+           statistic = est / se, p.value = 2 * pnorm(-abs(est / se)))
+  }))
+}) %>% bind_rows()
+# in percentage points
+ame_3way %>% transmute(grp, contrast, pp = round(100 * estimate, 2),
+                       CI_low_pp = round(100 * conf.low, 2), CI_high_pp = round(100 * conf.high, 2),
+                       p = signif(p.value, 3))
+
+
 # Export AME tables to LaTeX (same style as best_gauss.tex); values are taken directly from the model objects
 tex_p <- function(p) {
   stars <- ifelse(p < .001, "***", ifelse(p < .01, "**", ifelse(p < .05, "*", "")))
@@ -723,10 +775,10 @@ ame_rows <- function(d) {
           tex_label(d$contrast), 100 * d$estimate, 100 * d$std.error,
           100 * d$conf.low, 100 * d$conf.high, tex_p(d$p.value))
 }
-write_ame_tex <- function(ame, file, caption, label, by_cond = FALSE) {
+write_ame_tex <- function(ame, file, caption, label, by_cond = FALSE, note_extra = NULL) {
   d <- as.data.frame(ame)
-  if (by_cond) {
-    d$grp <- paste(d$beta, d$framing, sep = ", ")
+  if (by_cond) d$grp <- paste(d$beta, d$framing, sep = ", ")
+  if (by_cond || "grp" %in% names(d)) {
     body <- unlist(lapply(unique(d$grp), function(g) {
       c(sprintf("\\multicolumn{5}{l}{\\textit{%s}} \\\\", tex_label(g)),
         ame_rows(d[d$grp == g, ]))
@@ -734,6 +786,7 @@ write_ame_tex <- function(ame, file, caption, label, by_cond = FALSE) {
   } else body <- ame_rows(d)
   note <- paste0("\\textit{Note.} Average marginal effects (AME) on the probability scale, expressed in percentage points ",
                  "(population level, random effects set to zero). SE = standard error; CI = confidence interval. ",
+                 note_extra,
                  "*$p < .05$, **$p < .01$, ***$p < .001$.")
   tex <- c(
     "\\begin{table}[H]", "\\centering",
@@ -760,6 +813,15 @@ write_ame_tex(ame_anti_cond,
     "Average Marginal Effects of Anticonformity vs. Control on the Probability of Choosing the Middle Ground (Conditional on $\\beta$ and Framing)",
     "tab:ame_anti_cond",
     by_cond = TRUE)
+
+# Write the table for the three-way interaction AME (difference in the framing gap of the Anti effect between beta = 0.5 and beta = 0)
+write_ame_tex(ame_3way, 
+    paste0(REGRESSION_PATH, "best_r0_ame_anti_3way.tex"),
+    "Framing Gap in the Anticonformity Effect on the Probability of Choosing the Middle Ground, and the Three-Way Interaction (Anticonformity $\\times$ $\\beta$ $\\times$ Framing)",
+    "tab:ame_anti_3way",
+    note_extra = paste0("The framing gap is the difference in the AME of Anti vs. control between the political and the nonpolitical framing ",
+                        "(Political $-$ Nonpolitical) at a given $\\beta$; the three-way interaction is the difference between the gaps at $\\beta = 0.5$ and $\\beta = 0$. ",
+                        "Estimates are obtained from the conditional AMEs with the delta method. "))
 
 # # Write the table for the pairwise AME
 # write_ame_tex(ame_anti_pairwise, 

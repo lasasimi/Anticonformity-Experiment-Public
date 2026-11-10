@@ -1,0 +1,23 @@
+\begin{table}[H]
+\centering
+\caption{Average Marginal Effect of a Clear Majority in the Previous Round on the Probability of an Anticonforming Response}
+\label{tab:ame_antic_clearmaj}
+\begingroup
+\footnotesize
+\renewcommand{\arraystretch}{0.90}
+
+\begin{tabularx}{\linewidth}{Xcccc}
+\toprule
+\textbf{Predictor} & \textbf{AME (pp)} & \textbf{SE} & \textbf{95\% CI} & \textbf{p-value} \\
+\midrule
+Clear majority (3 of 3) vs. narrow majority (2 of 3) & -7.320 & 1.341 & [-9.949, -4.691] & $< .001^{\text{***}}$ \\
+\bottomrule
+\end{tabularx}
+
+\vspace{0.6em}
+{\footnotesize
+\setlength{\baselineskip}{12pt}
+\textit{Note.} Logit generalized linear mixed model of whether a participant anticonformed in a round (Bernoulli outcome, one row per participant and round) with a random intercept for participant (variance = 3.225; 5,816 rounds from 363 participants). A random intercept for neighborhood was dropped because its estimated variance was zero (singular fit); coefficients were similar with it included. Only rounds in which the previous round had a majority among the three other neighbors are included. A clear majority means all three neighbors gave the same response in the previous round; a narrow majority means two of three did. The average marginal effect (AME) is the difference in the probability of anticonforming, in percentage points, between a clear and a narrow majority, averaged over the observed rounds on the probability scale. It is population-level (random intercept set to zero). SE = standard error; CI = confidence interval. *$p < .05$, **$p < .01$, ***$p < .001$.
+\par}
+\endgroup
+\end{table}

@@ -1,0 +1,29 @@
+\begin{table}[H]
+\centering
+\caption{Odds Ratios of Demographic Variables Predicting Anticonforming Responses (Logit GLMM)}
+\label{tab:or_antic_demog}
+\begingroup
+\footnotesize
+\renewcommand{\arraystretch}{0.90}
+
+\begin{tabularx}{\linewidth}{Xcccc}
+\toprule
+\textbf{Predictor} & \textbf{OR} & \textbf{SE (log-odds)} & \textbf{95\% CI} & \textbf{p-value} \\
+\midrule
+Intercept & 3.199 & 0.116 & [2.547, 4.018] & $< .001^{\text{***}}$ \\
+Age (per 10 years, centered) & 0.984 & 0.028 & [0.932, 1.038] & .553 \\
+Gender: Man & 1.529 & 0.082 & [1.301, 1.796] & $< .001^{\text{***}}$ \\
+Education: University degree or more & 1.455 & 0.079 & [1.247, 1.698] & $< .001^{\text{***}}$ \\
+Political affiliation (+1 point; centered at 4) & 0.926 & 0.021 & [0.888, 0.965] & $< .001^{\text{***}}$ \\
+Neighborhood: Suburban & 1.190 & 0.088 & [1.002, 1.413] & $.047^{\text{*}}$ \\
+Neighborhood: Countryside & 1.175 & 0.122 & [0.926, 1.491] & .185 \\
+\bottomrule
+\end{tabularx}
+
+\vspace{0.6em}
+{\footnotesize
+\setlength{\baselineskip}{12pt}
+\textit{Note.} Odds ratios (OR) from a logit generalized linear mixed model of the number of anticonforming rounds out of each participant's usable rounds (binomial outcome), with a random intercept for neighborhood (variance = 0.252; 47 neighborhoods; N = 357 participants). OR $> 1$ indicates higher odds of anticonforming, OR $< 1$ lower odds. The intercept is the odds of anticonforming for the reference profile (mean age, political affiliation = 4, Gender = Woman, Education = High school diploma or equivalent, Neighborhood = Urban) in a typical neighborhood. Participants with gender ``Other'' or ``Prefer not to say'', with less than high school education, or with political affiliation ``Don't know'' are excluded. SE = standard error of the log-odds coefficient; CI = Wald 95\% confidence interval. *$p < .05$, **$p < .01$, ***$p < .001$.
+\par}
+\endgroup
+\end{table}

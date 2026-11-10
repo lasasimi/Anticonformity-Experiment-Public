@@ -1,0 +1,29 @@
+\begin{table}[H]
+\centering
+\caption{Average Marginal Effects of Demographic Variables on the Probability of an Anticonforming Response per Round}
+\label{tab:ame_antic_demog_round}
+\begingroup
+\footnotesize
+\renewcommand{\arraystretch}{0.90}
+
+\begin{tabularx}{\linewidth}{Xcccc}
+\toprule
+\textbf{Predictor} & \textbf{AME (pp)} & \textbf{SE} & \textbf{95\% CI} & \textbf{p-value} \\
+\midrule
+\multicolumn{5}{l}{\textit{Logit GLMM (participant random intercept; rounds as Bernoulli trials)}} \\
+Age (+10 years) & -0.345 & 0.619 & [-1.558, 0.869] & .578 \\
+Education: University degree or more vs. High school diploma or equivalent & 3.419 & 1.985 & [-0.472, 7.310] & .085 \\
+Gender: Man vs. Woman & 4.146 & 1.746 & [0.724, 7.567] & $.018^{\text{*}}$ \\
+Neighborhood: Countryside vs. Urban & 2.834 & 2.807 & [-2.668, 8.335] & .313 \\
+Neighborhood: Suburban vs. Urban & 2.566 & 2.164 & [-1.675, 6.806] & .236 \\
+Political affiliation (+1 point) & -0.858 & 0.493 & [-1.825, 0.109] & .082 \\
+\bottomrule
+\end{tabularx}
+
+\vspace{0.6em}
+{\footnotesize
+\setlength{\baselineskip}{12pt}
+\textit{Note.} Average marginal effects (AME) on the probability scale, expressed in percentage points, of the probability of an anticonforming round among participants who received the anticonformity tip. Age is centered and measured in decades; political affiliation is centered at the scale midpoint (1 = extremely liberal, 7 = extremely conservative). Categorical predictors are contrasts against the reference categories (Gender = Woman, Education = High school diploma or equivalent, Neighborhood = Urban). The GLMM effects are population-level (random effects set to zero). SE = standard error; CI = confidence interval. *$p < .05$, **$p < .01$, ***$p < .001$.
+\par}
+\endgroup
+\end{table}

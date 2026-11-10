@@ -1,0 +1,29 @@
+\begin{table}[H]
+\centering
+\caption{Odds Ratios of Demographic Variables Predicting Anticonforming Responses per Round (Logit GLMM)}
+\label{tab:or_antic_demog_round}
+\begingroup
+\footnotesize
+\renewcommand{\arraystretch}{0.90}
+
+\begin{tabularx}{\linewidth}{Xcccc}
+\toprule
+\textbf{Predictor} & \textbf{OR} & \textbf{SE (log-odds)} & \textbf{95\% CI} & \textbf{p-value} \\
+\midrule
+Intercept & 5.172 & 0.264 & [3.085, 8.669] & $< .001^{\text{***}}$ \\
+Age (per 10 years, centered) & 0.959 & 0.076 & [0.826, 1.112] & .577 \\
+Gender: Man & 1.694 & 0.222 & [1.097, 2.616] & $.017^{\text{*}}$ \\
+Education: University degree or more & 1.501 & 0.224 & [0.967, 2.328] & .070 \\
+Political affiliation (+1 point; centered at 4) & 0.900 & 0.059 & [0.802, 1.010] & .074 \\
+Neighborhood: Suburban & 1.350 & 0.243 & [0.839, 2.171] & .217 \\
+Neighborhood: Countryside & 1.399 & 0.344 & [0.712, 2.748] & .330 \\
+\bottomrule
+\end{tabularx}
+
+\vspace{0.6em}
+{\footnotesize
+\setlength{\baselineskip}{12pt}
+\textit{Note.} Odds ratios (OR) from a logit generalized linear mixed model of whether a participant anticonformed in a round (Bernoulli outcome, one row per participant and round) with a random intercept for participant (variance = 2.958; 5,723 rounds from 357 participants). A random intercept for neighborhood was dropped because its estimated variance was zero (singular fit). Only rounds in which the previous round had a majority among the three other neighbors are included. OR $> 1$ indicates higher odds of anticonforming, OR $< 1$ lower odds. The intercept is the odds of anticonforming for the reference profile (mean age, political affiliation = 4, Gender = Woman, Education = High school diploma or equivalent, Neighborhood = Urban) for a typical participant (random intercept = 0). Participants with gender ``Other'' or ``Prefer not to say'', with less than high school education, or with political affiliation ``Don't know'' are excluded. SE = standard error of the log-odds coefficient; CI = Wald 95\% confidence interval. *$p < .05$, **$p < .01$, ***$p < .001$.
+\par}
+\endgroup
+\end{table}
